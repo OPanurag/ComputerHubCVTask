@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheet Count Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .file-label:hover {
+            background-color: #0056b3;
+        }
+
+        .upload-btn {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .upload-btn:hover {
+            background-color: #218838;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Sheet Count Predictor</h1>
+    <p>Upload an image to predict the number of sheets and edges.</p>
+    <form id="upload-form" enctype="multipart/form-data">
+        <label for="file-upload" class="file-label">Choose File</label>
+        <input id="file-upload" type="file" name="file">
+        <button type="submit" class="upload-btn">Upload</button>
+    </form>
+    <div class="result" id="result"></div>
+</div>
+<div class="footer">
+    &copy; 2024 Sheet Count Predictor. All rights reserved.
+</div>
+
+<script>
+    document.getElementById('upload-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const fileInput = document.getElementById('file-upload');
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+        document.getElementById('result').innerHTML = `
+            <p>Sheet Count: ${result.sheet_count}</p>
+            <p>Edge Count: ${result.edge_count}</p>
+        `;
+    });
+</script>
+</body>
+</html>
